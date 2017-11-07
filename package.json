@@ -1,0 +1,39 @@
+{
+  "name": "sandcastle-ssu",
+  "version": "0.1.0",
+  "description": "손으로 모래를 모아 모래성을 쌓듯 한손 한손 데이터를 긁어모아서 만든 숭실대학교 데이터 크롤러",
+  "author": "Ssumunity Dev Team <ssumunity.dev@gmail.com>",
+  "contributors": [
+    {
+      "name": "forhack",
+      "email": "1004xlsrn@gmail.com"
+    },
+    {
+      "name": "gomgellie",
+      "email": "gomgellie@gmail.com"
+    }
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SSUmunity/SandCastle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SSUmunity/SandCastle/issues"
+  },
+  "keywords": [
+    "ssumunity",
+    "crawler",
+    "ssu",
+    "soongsil"
+  ],
+  "engines": {
+    "node": ">= 7.6.0"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
