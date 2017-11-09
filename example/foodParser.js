@@ -14,6 +14,13 @@ function test() {
     .then(console.log);
 
   option = {
+    dayOfWeek: 4,
+    kind: '학식',
+  };
+  foodParser.cafeteria(option)
+    .then(console.log);
+
+  option = {
     dayOfWeek: 'thu',
     kind: '교식',
   };
