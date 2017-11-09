@@ -40,6 +40,20 @@ function test() {
   };
   foodParser.cafeteria(option)
     .then(console.log);
+
+  option = {
+    dayOfWeek: 'thu', // 작동안함
+    kind: '기식',
+  };
+  foodParser.cafeteria(option)
+    .then(console.log);
+
+  option = {
+    dayOfWeek: '2016-00', // 작동안함
+    kind: '기식',
+  };
+  foodParser.cafeteria(option)
+    .then(console.log);
 }
 
 test();
