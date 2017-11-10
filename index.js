@@ -9,4 +9,8 @@ exports.Notice = {
   Main: notice.MainConstant,
 };
 
-exports.food = food;
+exports.cafeteria = food.cafeteria;
+exports.Cafeteria = {
+  Kind: food.Kind,
+  DayOfWeek: food.DayOfWeek,
+};

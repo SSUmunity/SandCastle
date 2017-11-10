@@ -2,57 +2,54 @@
 
 const sandCastle = require('../index');
 
-const foodParser = sandCastle.food;
-
-
 function test() {
   let option = {
     dayOfWeek: 'thu',
-    kind: '학식',
+    kind: sandCastle.Cafeteria.Kind.STUDENT,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     dayOfWeek: 4,
-    kind: '학식',
+    kind: sandCastle.Cafeteria.Kind.STUDENT,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     dayOfWeek: 'thu',
-    kind: '교식',
+    kind: sandCastle.Cafeteria.Kind.OFFICER,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     date: '2017-11-04',
-    kind: '기식',
+    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     dayOfWeek: 'thu',
-    kind: '기식',
+    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     dayOfWeek: 'thu',
-    kind: '기식',
+    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
     dayOfWeek: '2016-00', // 작동안함
-    kind: '기식',
+    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
-  foodParser.cafeteria(option)
+  sandCastle.cafeteria(option)
     .then(console.log)
     .catch(console.log);
 }
