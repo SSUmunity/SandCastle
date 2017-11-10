@@ -35,14 +35,14 @@ function test() {
     .then(console.log);
 
   option = {
-    dayOfWeek: 'thu', // 작동안함
+    dayOfWeek: 'thu',
     kind: '기식',
   };
   foodParser.cafeteria(option)
     .then(console.log);
 
   option = {
-    dayOfWeek: 'thu', // 작동안함
+    dayOfWeek: 'thu',
     kind: '기식',
   };
   foodParser.cafeteria(option)
@@ -53,7 +53,8 @@ function test() {
     kind: '기식',
   };
   foodParser.cafeteria(option)
-    .then(console.log);
+    .then(console.log)
+    .catch(console.log);
 }
 
 test();
