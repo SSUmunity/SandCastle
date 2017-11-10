@@ -18,7 +18,7 @@ function test() {
     .then(console.log);
 
   option = {
-    dayOfWeek: 'thu',
+    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.THU,
     kind: sandCastle.Cafeteria.Kind.OFFICER,
   };
   sandCastle.cafeteria(option)
@@ -32,14 +32,14 @@ function test() {
     .then(console.log);
 
   option = {
-    dayOfWeek: 'thu',
+    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.THU,
     kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
   sandCastle.cafeteria(option)
     .then(console.log);
 
   option = {
-    dayOfWeek: 'thu',
+    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.THU,
     kind: sandCastle.Cafeteria.Kind.RESIDENCE,
   };
   sandCastle.cafeteria(option)
