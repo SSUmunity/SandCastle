@@ -24,39 +24,46 @@ function test() {
 
   option = {
     dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
-    kind: sandCastle.Cafeteria.Kind.OFFICER,
+    kind: sandCastle.Cafeteria.Kind.FOOD_COURT,
   };
   sandCastle.cafeteria(option)
     .then(myLogger);
 
-  option = {
-    date: '2017-11-14',
-    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
-  };
-  sandCastle.cafeteria(option)
-    .then(myLogger);
-
-  option = {
-    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
-    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
-  };
-  sandCastle.cafeteria(option)
-    .then(myLogger);
-
-  option = {
-    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
-    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
-  };
-  sandCastle.cafeteria(option)
-    .then(myLogger);
-
-  option = {
-    dayOfWeek: '2016-00', // 작동안함
-    kind: sandCastle.Cafeteria.Kind.RESIDENCE,
-  };
-  sandCastle.cafeteria(option)
-    .then(myLogger)
-    .catch(myLogger);
+  // option = {
+  //   dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  //   kind: sandCastle.Cafeteria.Kind.OFFICER,
+  // };
+  // sandCastle.cafeteria(option)
+  //   .then(myLogger);
+  //
+  // option = {
+  //   date: '2017-11-14',
+  //   kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+  // };
+  // sandCastle.cafeteria(option)
+  //   .then(myLogger);
+  //
+  // option = {
+  //   dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  //   kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+  // };
+  // sandCastle.cafeteria(option)
+  //   .then(myLogger);
+  //
+  // option = {
+  //   dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  //   kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+  // };
+  // sandCastle.cafeteria(option)
+  //   .then(myLogger);
+  //
+  // option = {
+  //   dayOfWeek: '2016-00', // 작동안함
+  //   kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+  // };
+  // sandCastle.cafeteria(option)
+  //   .then(myLogger)
+  //   .catch(myLogger);
 }
 
 test();
