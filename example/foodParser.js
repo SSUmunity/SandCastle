@@ -24,6 +24,13 @@ function test() {
 
   option = {
     dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+    kind: sandCastle.Cafeteria.Kind.SNACK_CORNER,
+  };
+  sandCastle.cafeteria(option)
+    .then(myLogger);
+
+  option = {
+    dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
     kind: sandCastle.Cafeteria.Kind.FOOD_COURT,
   };
   sandCastle.cafeteria(option)
