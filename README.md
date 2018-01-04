@@ -20,13 +20,13 @@ NodeJS 라이브러리로 API호출로 데이터 오브젝트를 반환한다.
     - [더 키친](#더-키친)
       - [사용법](#더키친-예제)
 - [에러](#에러)
-  - [NoFoodToday](#NoFoodToday)
-  - [UnexpectedParameterDate](#UnexpectedParameterDate)
-  - [UnexpectedParameterDayOfWeek](#UnexpectedParameterDayOfWeek)
-  - [SoongguriDesktopConnectionError](#SoongguriDesktopConnectionError)
-  - [SoongguriJsonConnectionError](#SoongguriJsonConnectionError)
-  - [SsuDormConnectionError](#SsuDormConnectionError)
-- [License](#License)
+  - [NoFoodToday](#nofoodtoday)
+  - [UnexpectedParameterDate](#unexpectedparameterdate)
+  - [UnexpectedParameterDayOfWeek](#unexpectedparameterdayofweek)
+  - [SoongguriDesktopConnectionError](#soongguridesktopconnectionerror)
+  - [SoongguriJsonConnectionError](#soonggurijsonconnectionerror)
+  - [SsuDormConnectionError](#ssudormconnectionerror)
+- [License](#license)
 
 # 설치 방법
 NodeJS의 패키지매니저로부터 `sandcastle-ssu` 내려받기
