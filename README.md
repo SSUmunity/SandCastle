@@ -1,207 +1,508 @@
-# sand_castle
+# SandCastle
+손으로 모래를 모아 모래성을 쌓듯 한손 한손 데이터를 긁어모아서 만든 숭실대학교 데이터 크롤러.
+NodeJS 라이브러리로 API호출로 데이터 오브젝트를 반환한다.
 
-haksik
+# 목차
+- [설치 방법](#설치-방법)
+- [제공 기능](#제공-기능)
+  - [공지사항](#공지사항)
+    - [중앙 공지사항](#중앙-공지사항)
+      - [사용법](#사용법)
+  - [식단](#식단)
+    - [학식](#학식)
+      - [사용법](#학식-예제)
+    - [교식](#교식)
+      - [사용법](#교식-예제)
+    - [기식](#기식)
+      - [사용법](#기식-예제)
+    - [푸드코트](#푸드코트)
+      - [사용법](#푸드코트-예제)
+    - [더 키친](#더-키친)
+      - [사용법](#더키친-예제)
+- [에러](#에러)
+  - [NoFoodToday](#NoFoodToday)
+  - [UnexpectedParameterDate](#UnexpectedParameterDate)
+  - [UnexpectedParameterDayOfWeek](#UnexpectedParameterDayOfWeek)
+  - [SoongguriDesktopConnectionError](#SoongguriDesktopConnectionError)
+  - [SoongguriJsonConnectionError](#SoongguriJsonConnectionError)
+  - [SsuDormConnectionError](#SsuDormConnectionError)
+- [License](#License)
 
-### install
+# 설치 방법
+NodeJS의 패키지매니저로부터 `sandcastle-ssu` 내려받기
+## npm을 사용할 때
+```bash
+$ npm install sandcastle-ssu
+```
+## yarn을 사용할 때
+```bash
+$ yarn add sandcastle-ssu
+```
+
+# 제공 기능
+숭실대학교 학생들이 사용할 수 있는 서비스을 크롤링하는 기능을 제공한다.
+## 공지사항
+숭실대학교의 공지사항을 크롤링해오는 기능을 수행한다.
+### 중앙 공지사항
+숭실대학교 홈페이지에서 확인되는 공지사항을 크롤링해올 수 있다.
+#### 사용법
+```js
+// 라이브러리 추가해서 sandCastle 변수에 할당.
+const sandCastle = require('sandcastle-ssu');
+
+// 크롤링을 수행할 옵션을 설정.
+const option = {
+  kind: sandCastle.Notice.Kind.MAIN,
+  startPage: 1,
+  endPage: 2,
+  count: '',
+  increaseMode: sandCastle.Notice.Main.IncreaseMode.PAGE,
+  category: [sandCastle.Notice.Main.Category.notice],
+};
+
+// 공지사항 크롤링 수행.
+const noticeList = sandCastle.notice(option);
+// 반환된 Promise의 결과를 출력하기.
+noticeList
+  .then(console.log)
+  .catch(console.log);
+```
+
+##### sandCastle.notice(option)
+실질적으로 공지사항 크롤링을 수행하는 함수. 정해진 option인자를 넣으면 거기에 맞는 형태로 크롤링을 수행한다.
+비동기방식으로 수행되며 Promise를 반환한다.
+
+##### option
+- kind : 공지사항의 종류를 선택하는 속성. ex) 중앙 공지사항, 도서관 공지사항, 각 학부(과) 공지사항
+  - sandCastle.Notice.Kind.MAIN : 중앙 공지사항
+- category : 공지사항의 카테고리 선택하는 속성. 배열 객체로 되어있어서 원하는 카테고리를 추가할 수 있다.
+  - Main
+    - sandCastle.Notice.Main.Category.all : 전체 카테고리
+    - sandCastle.Notice.Main.Category.notice : 학사 카테고리
+    - sandCastle.Notice.Main.Category.scholarship : 학사 카테고리
+    - sandCastle.Notice.Main.Category.international : 국제교류 카테고리
+    - sandCastle.Notice.Main.Category.foreign : 외국인유학생 카테고리
+    - sandCastle.Notice.Main.Category.recruit : 모집·채용 카테고리
+    - sandCastle.Notice.Main.Category.events : 교내행사 카테고리
+    - sandCastle.Notice.Main.Category.external : 교외행사 카테고리
+    - sandCastle.Notice.Main.Category.volunteer : 봉사 카테고리
+- increaseMode : 공지사항의 페이지를 가지고 오는 방식을 선택하는 속성.
+  - sandCastle.Notice.Main.IncreaseMode.PAGE : 페이지 단위로 startPage부터 시작해서 endPage - 1 페이지까지 크롤링해온다.
+  - sandCastle.Notice.Main.IncreaseMode.COUNT : 페이지 단위로 startPage부터 시작해서 count개 페이지를 크롤링해온다.
+- startPage : 공지사항 크롤링의 첫번째 페이지를 선택한다.
+- endPage : 공지사항 크롤링의 마지막 페이지를 선택한다.
+- count : 크롤링할 페이지의 수를 지정한다.
+#### 반환값
+```js
+[{
+  notice: {
+    title: 'ssumunity가 크롤러를 오픈했습니다!',
+    date: '2017-11-11',
+    url: 'http://hostname/p/a/t/h/file.hwp',
+    messageId: '1234152',
+    contents: '<html><head>우아아아앙</head></html>',
+    category: 'notice',
+    kind: 'main',
+  },
+  attachedFiles: {
+    url: 'http://hostname/p/a/t/h/file.hwp',
+    name: 'path파일.hwp',
+  },
+}, {Notice Object}]
+```
+배열로 반환되며 그 안에 공지사항 오브젝트가 담겨있는 형태이다.
+##### Notice Object
+- notice : 하나의 공지사항을 다루는 오브젝트.
+  - title : 공지사항의 제목.
+  - date : 공지사항이 공지된 날짜.
+  - url : 공지사항 페이지의 링크.
+  - messageId : 공지사항의 식별번호. 문자열
+  - contents : 공지사항의 내용을 가져온다. html형태.
+  - category : 공지사항의 카테고리
+  - kind : 공지사항의 종류
+- attachedFiles : 공지사항에 첨부된 파일의 오브젝트.
+  - url : 첨부파일을 다운받을 수 있는 링크.
+  - name : 첨부파일의 이름.
+
+## 식단
+
+숭실대학교의 식단을 파싱하는 기능을 수행한다.
+
+#### sandCastle.cafeteria
+
+- args: [cafeteria option](#cafeteria-option)
+
+- return: Native-Promise
+
+#### cafeteria option
+
+dayOfWeek, date, kind 를 키값으로 갖는 object.
+
+##### kind, dayOfWeek
+
+kind 와 dayOfWeek를 위한 상수는 sandCastle.Cafeteria.Kind 와 sandCastle.Cafeteria.DayOfWeek 에 다음과 같이 정의 된다.
+
+```js
+sandCastle.Cafeteria.Kind = {
+  STUDENT: '학식',
+  OFFICER: '교식',
+  RESIDENCE: '기식',
+  FOOD_COURT: '푸드코트',
+  SNACK_CORNER: '스넥코너',
+};
+
+sandCastle.Cafeteria.DayOfWeek = {
+  SUN: 'sun',
+  MON: 'mon',
+  TUE: 'tue',
+  WED: 'wed',
+  THU: 'thu',
+  FRI: 'fri',
+  SAT: 'sat',
+};
+```
+
+kind에 따라 option을 다르게 준다. 다음의 표를 참고
+
+| kind  | dayOfWeek | date         |
+| :------------ | :-----------: | :-----------------------: |
+| 학식 | 필수 | 인자로 받을 수 없음(지원 예정) |
+| 교식 | 필수 | 인자로 받을 수 없음(지원 예정) |
+| 기식 |양자택일 | 양자택일 |
+| 푸드코트 | 필수 | 인자로 받을 수 없음(지원 예정) |
+| 스넥코너 | 필수 | 인자로 받을 수 없음(지원 예정) |
+
+##### date
+
+'YEAR-MONTH-DATE' or 'MONTH/DATE/YEAR' 형식을 갖는 String
+
+#### Basic Usage
+
+```js
+const sandCastle = require('sandcastle');
+sandCastle.cafeteria({
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.MON,
+  // date: '2018-2-2',
+  kind: sandCastle.Cafeteria.Kind.STUDENT,
+}).then((result) => {
+  // Your Code HERE
+}).catch((err) => {
+  // Your Code HERE
+});
+
+sandCastle.cafeteria
+```
+
+### 학식
+
+#### 학식 예제
+
+option.kind = sandCastle.Cafeteria.Kind.STUDENT 로 옵션 인자를 전달해서 사용한다.
+
+sandCastle.Cafeteria.Kind.STUDENT 는 '학식'으로 정의된 상수이다.
+
+```js
+const sandCastle = require('sandcastle');
+const util = require('util');
+
+const myLogger = (res) => {
+  console.log(util.inspect(res, {showHidden: false, depth: null}));
+};
+
+const option = {
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  kind: sandCastle.Cafeteria.Kind.STUDENT,
+};
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+
+> { kind: 'student',
+    dayOfWeek: 2,
+    date: '2018-2-2',
+    menu:
+     [ { category: '조식', price: undefined, meals: [ '새해 복 많이 받으세요' ] },
+       { category: '중식',
+         price: [ '4,000' ],
+         meals: [ '포테이토치즈돈가스토마토소스', '미니밥', '미소국', '양상추샐러드', '마늘빵', '깍두기' ] } ] }
+
+```
+
+### 교식
+
+#### 교식 예제
+
+option.kind = sandCastle.Cafeteria.Kind.OFFICER 로 옵션 인자를 전달해서 사용한다.
+
+sandCastle.Cafeteria.Kind.STUDENT 는 '교식'으로 정의된 상수이다.
+
+```js
+const sandCastle = require('sandcastle');
+const util = require('util');
+
+const myLogger = (res) => {
+  console.log(util.inspect(res, {showHidden: false, depth: null}));
+};
+
+const option = {
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  kind: sandCastle.Cafeteria.Kind.OFFICER,
+};
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+
+> { kind: 'officer',
+    dayOfWeek: 4,
+    date: '2018-2-4',
+    menu:
+     [ { category: '중식',
+         price: [ '5,000' ],
+         meals: [ '고구마돈까스정식', '파스타', '양상추샐러드드레싱', '양파링튀김귤' ] },
+       { category: '석식',
+         price: [ '4,000' ],
+         meals: [ '등뼈감자탕', '오징어파전', '춘권사과잼', '맛살오이초장무침' ] } ] }
+
+```
+
+### 기식
+
+#### 기식 예제
+
+option.kind = sandCastle.Cafeteria.Kind.RESIDENCE 로 옵션 인자를 전달해서 사용한다.
+
+sandCastle.Cafeteria.Kind.RESIDENCE 는 '기식'으로 정의된 상수이다.
+
+```js
+const sandCastle = require('sandcastle');
+const util = require('util');
+
+const myLogger = (res) => {
+  console.log(util.inspect(res, {showHidden: false, depth: null}));
+};
+
+// option에 date를 이용
+let option = {
+  // date는 'YEAR-MONTH-DATE' 혹은 'MONTH/DATE/YEAR' 형식을 만족해야 한다.
+  date: '2017-11-30', // '11/30/2017' 로 대신 할 수 있다.
+  kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+};
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+
+> { kind: 'residence',
+    dayOfWeek: 4,
+    date: '11/30/2017',
+    menu:
+     [ { category: '조식',
+         price: 0,
+         meals: [ '동그랑땡전', '연두부맑은국', '건파래볶음', '마늘쫑무침', '김치', '흑미밥' ] },
+       { category: '중식',
+         price: 0,
+         meals: [ '한식잡채', '수제비김칫국', '소시지양파볶음', '깍두기', '흑미밥' ] },
+       { category: '석식',
+         price: 0,
+         meals: [ '생선까스타르타르소스', '육개장', '시금치나물', '김치', '흑미밥' ] },
+       { category: '특식', price: 0, meals: [ '특식제육뚝배기', '특석식갈비탕' ] } ] }
+
+//option에 dayOfWeek 이용
+option = {
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  kind: sandCastle.Cafeteria.Kind.RESIDENCE,
+};
+
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+> { kind: 'residence',
+    dayOfWeek: 5,
+    date: '1/2/2018',
+    menu:
+     [ { category: '조식',
+         price: 0,
+         meals: [ '한식잡채', '시금치된장국', '두부계란전', '깻잎지', '김치', '흑미밥' ] },
+       { category: '중식',
+         price: 0,
+         meals: [ '닭강정', '바지락된장국', '마카로니샐러드', '유부숙주나물', '김치', '흑미밥' ] },
+       { category: '석식',
+         price: 0,
+         meals: [ '베이컨마늘볶음밥', '미역국', '만두강정', '어묵볶음', '김치' ] },
+       { category: '특식', price: 0, meals: [ '' ] } ] }
+
+```
+
+### 스넥코너
+
+#### 스넥코너 예제
+
+option.kind = sandCastle.Cafeteria.Kind.SNACK_CORNER 로 옵션 인자를 전달해서 사용한다.
+
+sandCastle.Cafeteria.Kind.SNACK_CORNER 는 '스넥코너'으로 정의된 상수이다.
+
+```js
+const sandCastle = require('sandcastle');
+const util = require('util');
+
+const myLogger = (res) => {
+  console.log(util.inspect(res, {showHidden: false, depth: null}));
+};
+
+const option = {
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  kind: sandCastle.Cafeteria.Kind.SNACK_CORNER,
+};
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+
+> { kind: 'snackCorner',
+    dayOfWeek: 2,
+    date: '2018-2-2',
+    menu:
+     [ { category: '면류', price: '2.8', meals: '짜계치 +야끼만두' },
+       { category: '면류', price: '2.5', meals: '계란신라면' },
+       { category: '면류', price: '2.5', meals: '치즈신라면' },
+       { category: '면류', price: '3.0', meals: '신라면+스쿱밥' },
+       { category: '밥류', price: '3.0', meals: '참치마요컵밥' },
+       { category: '밥류', price: '2.5', meals: '도시락' },
+       { category: '밥류', price: '3.0', meals: '불고기비빔밥' },
+       { category: '김밥류', price: '2.5', meals: 'SSU야채김밥' },
+       { category: '김밥류', price: '2.5', meals: '매콤마요소고기김밥' },
+       { category: '떡볶이류', price: '3.5', meals: '피자치즈라떡볶이' },
+       { category: '샌드위치', price: '2.5', meals: '샌드위치+음료' },
+       { category: '기타류', price: '3.5', meals: '사골떡만두국' },
+       { category: '기타류', price: '1.0', meals: '빅핫도그' },
+       { category: '기타류', price: '1.0', meals: '공기밥' } ] }
+
+```
+
+### 푸드코트
+
+#### 푸드코트 예제
+
+```js
+
+
+option.kind = sandCastle.Cafeteria.Kind.FOOD_COURT 로 옵션 인자를 전달해서 사용한다.
+
+sandCastle.Cafeteria.Kind.FOOD_COURT 는 '푸드코트'으로 정의된 상수이다.
+
+```js
+const sandCastle = require('sandcastle');
+const util = require('util');
+
+const myLogger = (res) => {
+  console.log(util.inspect(res, {showHidden: false, depth: null}));
+};
+
+const option = {
+  dayOfWeek: sandCastle.Cafeteria.DayOfWeek.TUE,
+  kind: sandCastle.Cafeteria.Kind.FOOD_COURT,
+};
+
+sandCastle.cafeteria(option)
+  .then(myLogger)
+  .catch(myLogger);
+
+> { kind: 'foodCourt',
+    dayOfWeek: 2,
+    date: '2018-2-2',
+    menu:
+     [ { category: '파스타', price: '6.5', meals: '투움바 파스타' },
+       { category: '파스타', price: '6.5', meals: '봉골레 파스타' },
+       { category: '파스타', price: '7.0', meals: '빠네파스타' },
+       { category: '파스타', price: '6.5', meals: '아라비아따 파스타' },
+       { category: '파스타', price: '6.5', meals: '상하이 파스타' },
+       { category: '파스타', price: '6.5', meals: '해물크림파스타' },
+       { category: '파스타', price: '6.5', meals: '해물토마토파스타' },
+       { category: '파스타', price: '6.5', meals: '라구파스타' },
+       { category: '리조또', price: '6.5', meals: '해물리조또' },
+       { category: '리조또', price: '6.5', meals: '쉬림프로제리조또' },
+       { category: '피자', price: '9.0', meals: '마르게리따 피자' },
+       { category: '피자', price: '9.0', meals: '고르곤졸라 피자' },
+       { category: '미분류', price: '6.5', meals: '찜닭' },
+       { category: '미분류', price: '7.0', meals: '치즈찜닭' },
+       { category: '면류', price: '6.5', meals: '소고기쌀국수(국물쌀국수)' },
+       { category: '면류', price: '6.5', meals: '팟타이(볶음쌀국수)' },
+       { category: '밥', price: '6.0', meals: '치킨마늘볶음밥' },
+       { category: '면류', price: '6.0', meals: '짬뽕밥' },
+       { category: '면류', price: '6.0', meals: '삼선짬뽕' },
+       { category: '미분류', price: '6.5', meals: '로스까스' },
+       { category: '미분류', price: '6.5', meals: '가츠벤토' },
+       { category: '미분류', price: '6.5', meals: '김치치즈가츠동' } ] }
+
+
+```
+
+## 에러
+
+### NoFoodToday
+
+학교 서버에 식단이 업로드 되지 않아서 데이터를 가져올 수 없는 경우 발생함.
+
+### UnexpectedParameterDate
+
+option으로 넘겨준 date가 'YEAR-MONTH-DATE' 혹은 'MONTH/DATE/YEAR' 형식을 만족하지 않은 경우 발생함.
+
+### UnexpectedParameterDayOfWeek
+
+option으로 넘겨준 dayOfWeek가 ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] 중 한가지가 아닌경우 발생함.
+
+### SoongguriDesktopConnectionError
+
+`http://www.soongguri.com/main.php?mkey=2&w=3&l=3` 로부터 1.5초 이상 응답이 없거나 네트워크가 연결되지 않음.
+
+### SoongguriJsonConnectionError
+
+`http://soongguri.com/menu/m_menujson.php` 로부터 1.5초 이상 응답이 없거나 네트워크가 연결되지 않음.
+
+### SsuDormConnectionError
+
+`http://ssudorm.ssu.ac.kr/SShostel/mall_main.php` 로부터 1.5초 이상 응답이 없거나 네트워크가 연결되지 않음.
+
+## Run Tests
 
 ```bash
 
-npm install sand_castle
+node ./example/food/student.js
 
-```
-### import
+node ./example/food/officer.js
 
-```js
-const sand_castle = require('sand_castle');
-const food = sand_castle.food;
+node ./example/food/residence.js
 
-```
-## API
+node ./example/food/snackCorner.js
 
-### Table of contents
-
-
-<details>
-  <summary>haksik</summary>
-  
-  - [.getFacultyJson( day_of_week )](#getfacultyjson-day_of_week-)
-  
-  - [.getPupilJson( day_of_week )](#getpupiljson-day_of_week-)
-  
-  - [.getDormJson( year, month, day )](#getdormjson-year-month-day-)
-  
-</details>
-
-<details>
-  <summary>notice</summary>
-  
-  - [.this_is_example_method( not_implemented )](#)
-
-</details>
-
-### methods
-
-#### .getFacultyJson( day_of_week )
-
-교직원 식당 메뉴를 가져온다.
-
-day_of_week 인자를 생략하면 오늘자 메뉴를 리턴함.
-
-```js
-
-food.getFacultyJson().then(console.log); // 오늘의 메뉴
-
-> { '조식': [ '계란장조림', '김자반볶음', '진미채볶음', '무조림', '강낭콩밥', '쇠고기미역국', '배추김치' ],
-  '중식1': [ '왕치즈등심돈까스 로제소스' ],
-  '중식2': [ '떡갈비채비빔밥' ],
-  '석식1': [ '왕새우오므라이스세트', '홍합미역국', '간장소스두부강정', '건새우마늘쫑볶음', '샐러드파스타', '배추김치' ] }
-
-```
-
-```js
-
-food.getFacultyJson(3).then(console.log); // 수요일 메뉴
-
-> { '조식': [ '준비중입니다' ],
-  '중식1': [ '불고기전골', '쫄면무침', '땅콩튀김배추김치' ],
-  '중식2': [ '비벼먹는김치찌개', '계란후라이' ],
-  '석식1': [ '치즈불닭', '새송이굴소스볶음', '청경채사과무침', '깍두기' ] }
-
-```
-
-#### .getPupilJson( day_of_week )
-
-학생 식당 메뉴를 가져온다.
-
-day_of_week 인자를 생략하면 오늘자 메뉴를 리턴함.
-
-```js
-
-food.getPupilJson().then(console.log); // 오늘의 학식 메뉴
-
-> { '중식1': [ '돌솥날치알치즈비빔밥', '어묵국', '치킨너겟', '맛김치' ],
-  '중식2': [ '뿌링뿌링치킨갈릭마요', '오이맛살초무침', '맛김치', '유부국' ],
-  '중식3': [ '차슈덮밥', '새우튀김', '얼큰우동' ],
-  '석식1': [ '닭개장', '스팸구이', '볼어묵볶음', '맛김치' ] }
-
-```
-
-```js
-
-food.getPupilJson(4).then(console.log); // 목요일 학식 메뉴
-
-> { '중식1': [ '사골곰탕소면사리' ],
-  '중식2': [ '치즈오므라이스로제' ],
-  '중식3': [ '깐풍기' ],
-  '석식1': [ '목살필라프' ] }
-
-```
-
-#### .getDormJson( year, month, day )
-
-기숙사 식당 메뉴를 가져온다.
-
-인자가 없으면 이번주 식단을 리턴함.
-
-```js
-
-food.getDormJson().then(console.log);
-
-> { '월':
-   { '아침': [ '떡잡채', '연두부맑은국', '옥수수버터볶음', '콩나물무침', '김치', '흑미밥' ],
-     '점심': [ '김치볶음밥계란후라이', '우동국', '고구마맛탕', '건새우마늘쫑볶음', '깍두기' ],
-     '저녁': [ '콩나물불고기', '재첩국', '어묵볶음', '김치', '흑미밥' ],
-     '특식': [ '특식뚝배기설렁탕', '특석식철판닭갈비볶음밥' ] },
-  '화':
-   { '아침': [ '해물동그랑땡전', '북엇국', '베이컨야채볶음', '오징어젓갈무무침', '김치', '흑미밥' ],
-     '점심': [ '마파두부덮밥', '다시마무국', '야채튀김', '어묵계란볶음', '김치' ],
-     '저녁': [ '오징어초무침', '닭곰탕', '두부구이', '김치', '흑미밥' ],
-     '특식': [ '특식가츠동', '특석식제육뚝배기' ] },
-  '수':
-   { '아침': [ '스팸전', '김칫국', '연근조림', '숙갓두부무침', '깍두기', '흑미밥' ],
-     '점심': [ '해물볶음밥', '근대국', '또띠아', '물파래무침', '김치김치국내산배추국내산 고춧가루중국산국내산' ],
-     '저녁': [ '칠리두부탕수육', '떡국', '우엉잡채', '김치', '흑미밥' ],
-     '특식': [ '특식갈뼜', '특석식닭볶음탕' ] },
-  '목':
-   { '아침': [ '계란모듬조림', '오징어묵', '어묵마늘쫑볶음', '해초샐러드', '김치', '흑미밥' ],
-     '점심': [ '깐풍기', '두부장국', '단호박범벅', '김치', '흑미밥' ],
-     '저녁': [ '생선까스타르타르소스', '사골우거지국', '도토리묵야채무침', '김치', '흑미밥' ],
-     '특식': [ '특식치킨마요덮밥', '특석식뚝배기불고기' ] },
-  '금':
-   { '아침': [ '콩나물잡채', '열무된장국', '두부강정두부콩수입산', '건파래무침', '김치', '흑미밥' ],
-     '점심': [ '햄전', '김치볶음후라이', '유부맑은국', '깍두기', '흑미밥' ],
-     '저녁': [ '철판삼겹살볶음', '팽이버섯장국', '피망잡채꽃빵', '김치', '흑미밥' ],
-     '특식': [ '특식돈등뼈감자탕' ] },
-  '토':
-   { '아침': [ '조기구이', '만두국', '호박나물', '미역줄기볶음', '김치', '흑미밥' ],
-     '점심': [ '장각백숙', '고추장떡', '모듬야채스틱', '김치', '추가밥' ],
-     '저녁': [ '모듬정식', '크림스프', '양상추샐러드', '감자튀김', '김치', '흑미밥' ],
-     '특식': [ '' ] },
-  '일':
-   { '아침': [ '맛살야채볶음', '감자계란국', '느타리버섯나물', '건다시마튀각', '김치', '흑미밥' ],
-     '점심': [ '소고기양송이덮밥', '호박고추장찌개', '핫도그케찹', '무생채', '김치' ],
-     '저녁': [ '보쌈', '팽이버섯장국', '상추쌈장', '시금치들깨나물', '김치', '흑미밥' ],
-     '특식': [ '' ] } }
-
-```
-
-```js
-
-food.getDormJson(2017, 10, 20).then(console.log);
-
-> { '월':
-   { '아침': [ '돈육조랭이떡조림', '다시마무국', '망고상추샐러드', '건파래무침', '김치', '흑미밥' ],
-     '점심': [ '카레라이스', '팽이버섯장국', '오꼬노미야끼', '오복지무침', '김치' ],
-     '저녁': [ '치킨까스소스', '콩가루배춧국', '메밀비빔면', '김치', '흑미밥' ],
-     '특식': [ '특식제육뚝배기', '특석식안동찜닭' ] },
-  '화':
-   { '아침': [ '비엔나야채볶음', '꽃게찌개', '콩나물미더덕찜', '오이생채', '김치', '흑미밥' ],
-     '점심': [ '매콤불닭', '콩나물국', '메쉬드포테이토', '김치', '흑미밥' ],
-     '저녁': [ '스팸구이', '버섯고추장국', '계란찜', '김치', '흑미밥' ],
-     '특식': [ '특식냄비부대찌개', '특석식뚝배기순두부찌개' ] },
-  '수':
-   { '아침': [ '단호박메추리알조림', '순두부맑은국', '햄브로콜리볶음', '무들기김치', '흑미밥름나물' ],
-     '점심': [ '계란볶음밥케찹', '꼬치어묵국', '생선까스타르타르소스', '마늘쫑무침', '김치' ],
-     '저녁': [ '후르츠탕수육', '피홍합국', '베이컨피망볶음', '김치', '흑미밥' ],
-     '특식': [ '특식숯불맛제육덮밥', '특석식왕만두김치전골' ] },
-  '목':
-   { '아침': [ '동그랑땡전', '아욱된장국', '콩나물잡채', '얼갈이나물', '김치', '흑미밥' ],
-     '점심': [ '돈육볶음', '건새우무국', '샐러드', '김치', '흑미밥' ],
-     '저녁': [ '미나리낙지오징어덮밥', '계란파국', '고구마맛탕', '김치', '쥬시쿨' ],
-     '특식': [ '특식매운갈비찜', '특석식철판베이컨볶음밥' ] },
-  '금':
-   { '아침': [ '감자고추장찌개', '햄에그롤', '명엽채볶음', '고추지무침', '김치', '흑미밥' ],
-     '점심': [ '소고기매콤잡채', '시금치된장국', '두부계란전', '김치', '흑미밥' ],
-     '저녁': [ '모듬정식', '크림스프', '과일샐러드', '감자튀김', '김치', '흑미밥' ],
-     '특식': [ '특식뚝배기치즈닭갈비' ] },
-  '토':
-   { '아침': [ '옛날소시지전', '북엇국', '건파래볶음', '깻잎지', '김치', '흑미밥' ],
-     '점심': [ '오므라이스소시지', '미소장국', '바나나', '모닝빵쨈', '김치' ],
-     '저녁': [ '뚝배기설렁탕', '오징어링튀김케찹', '호박볶음', '깍두기', '흑미밥' ],
-     '특식': [ '' ] },
-  '일':
-   { '아침': [ '너비아니구이', '미역국', '견과류멸치볶음', '쑥갓두부무침', '김치', '흑미밥' ],
-     '점심': [ '제육덮밥', '배춧국', '떡갈비왕꼬치', '콩나물무침', '김치' ],
-     '저녁': [ '깐풍기볶음밥', '유부장국', '군만두', '햄마늘쫑볶음', '열무김치' ],
-     '특식': [ '' ] } }
-
-```
-
-
-## Linting
-
-```bash
-
-npm run lint
-
-```
-
-## Testing
-
-```bash
-
-node ./example/foodParser.js
+node ./example/food/foodCourt.js
 
 node ./example/noticeCrawler.js
 
 ```
+
+## License
+```
+Copyright 2017 SSUmunity
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
