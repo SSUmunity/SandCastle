@@ -160,3 +160,7 @@ Temporary Items
 \.idea/eslintPlugin\.xml
 
 model/config\.js
+
+# for ijavascript 
+venv/
+*.ipynb
